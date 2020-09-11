@@ -12,7 +12,7 @@ Options:
   -h    Show this help and exit
   -t    String passed to timeout command [$timeout_length]
   -x    Be more verbose by setting the bash -x option
-
+  
 Example - look for 'foo' and 'bar'. Give up after 42 seconds:
   $0 -t 42s foo bar
 "
@@ -29,6 +29,9 @@ while getopts "ht:x" opt; do
         ;;
     x)  set -x
         ;;
+    *)  echo "Error: unrecognised opt $opt"
+        exit 1
+        ;;
     esac
 done
 
@@ -43,5 +46,5 @@ fi
 
 # See https://stackoverflow.com/questions/59895/how-to-get-the-source-directory-of-a-bash-script-from-within-the-script-itself
 this_script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-simg=$this_script_dir/alpine.simg
-timeout $timeout_length singularity exec $simg ls $@
+simg="${this_script_dir}/alpine.simg"
+timeout "$timeout_length" singularity exec "$simg" ls "$@"
